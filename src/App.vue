@@ -1,5 +1,5 @@
 <template>
-  <HelloWorld msg="Track Your Tasks"/>
+  <HelloWorld msg="Todos"/>
 </template>
 
 <script>

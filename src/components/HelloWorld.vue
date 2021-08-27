@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <hr/>
-    <input type="text" placeholder="Enter Next Task" v-model="currentText" @keypress.enter="addTask"/>
+    <input type="text" placeholder="Enter next task" v-model="currentText" @keypress.enter="addTask"/>
 
     <transition-group
       name="flip-list"
@@ -11,10 +11,12 @@
       <li
         v-for="(task, index) in toDoTasks"
         :key="task"
-        @click="removeTask(index)"
+        @click="finishTask(index)"
         class="todo-tasks"
+        title="Finish task"
       >
         <span>{{ task }} </span>
+        <span title="Remove task" @click.stop="deleteTask(index)" class="delete-task">&#10006;</span>
       </li>
 
       <li
@@ -22,6 +24,7 @@
         :key="task"
         @click="restoreTask(index)"
         class="done-tasks"
+        title="Add the task back to todolist"
       > 
         <span>{{ task }} </span>
       </li>
@@ -41,7 +44,7 @@ export default {
   data() {
     return {
       currentText: '',
-      toDoTasks: ["1", "2", "3", "4"],
+      toDoTasks: [],
       doneTasks: []
     }
   },
@@ -50,7 +53,7 @@ export default {
       this.toDoTasks.push(this.currentText);
       this.currentText = '';
     },
-    removeTask(taskIndex) {
+    finishTask(taskIndex) {
       const removedTask = this.toDoTasks[taskIndex];
       this.toDoTasks = [
         ...this.toDoTasks.slice(0, taskIndex),
@@ -66,17 +69,34 @@ export default {
         ...this.doneTasks.slice(taskIndex + 1)
       ];
       this.toDoTasks.push(restoredTask);
+    },
+    deleteTask(taskIndex) {
+      this.toDoTasks = [
+        ...this.toDoTasks.slice(0, taskIndex),
+        ...this.toDoTasks.slice(taskIndex + 1)
+      ];
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
 
 .flip-list-move {
-  transition: transform 0.8s ease;
+  transition: transform 0.5s ease;
 }
+
+.flip-list-enter-active,
+.flip-list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.flip-list-enter-from,
+.flip-list-leave-to {
+  opacity: 0;
+}
+
 
 .hello {
   width: 50%;
@@ -96,8 +116,30 @@ input {
   background: inherit;
   border-bottom: 2px solid #eee;
 }
+
+input::placeholder {
+  color: #bdbdbd;
+  font-style: italic;
+}
+
 input:focus, input:active, input:focus-visible {
   outline: none;
+}
+
+.delete-task {
+  margin-left: auto;
+  display: none;
+  font-size: 20px;
+  
+}
+
+li:hover .delete-task {
+  display: inline;
+}
+
+.delete-task:hover {
+  color: #d32f2f;
+  transition: color .2s ease-in;
 }
 
 .done-tasks span {
@@ -105,9 +147,14 @@ input:focus, input:active, input:focus-visible {
   text-decoration: line-through;
 }
 
-h3 {
-  margin: 40px 0 0;
+
+h1 {
+  background: #e0e0e0;
+  margin: 0;
+  padding: 20px;
+  color: #4d4d4d;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
@@ -115,19 +162,21 @@ ul {
   flex-direction: column;
   margin: 0px;
 }
+
 li {
-  display: inline-block;
-  padding: 10px;
+  color: #4d4d4d;
   width: 100%;
   border-bottom: 1px solid #eee;
   font-size: 24px;
   text-align: left;
-  padding-left: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: flex;
 }
 
 hr {
   border: 1px solid #c7c7c7;
-  margin: 20px auto;
+  margin: 0px;
 }
 
 a {
