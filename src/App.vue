@@ -1,6 +1,5 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <HelloWorld msg="Track Your Tasks"/>
 </template>
 
 <script>
@@ -22,5 +21,16 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  width: 70%;
+  margin: auto;
+  min-height: 500px;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #fafafa;
 }
 </style>
