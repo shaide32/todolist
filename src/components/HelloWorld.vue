@@ -10,23 +10,23 @@
     >
       <li
         v-for="(task, index) in toDoTasks"
-        :key="task"
+        :key="task.id"
         @click="finishTask(index)"
         class="todo-tasks"
         title="Finish task"
       >
-        <span>{{ task }} </span>
+        <span>{{ task.text }} </span>
         <span title="Remove task" @click.stop="deleteTask(index)" class="delete-task">&#10006;</span>
       </li>
 
       <li
         v-for="(task, index) in doneTasks"
-        :key="task"
+        :key="task.id"
         @click="restoreTask(index)"
         class="done-tasks"
         title="Add the task back to todolist"
       > 
-        <span>{{ task }} </span>
+        <span>{{ task.text }} </span>
       </li>
     </transition-group>
     <!-- <h3 v-if="toDoTasks.length === 0"> You don't have any pending tasks. </h3> -->
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { nanoid } from 'nanoid'
 
 export default {
   name: 'HelloWorld',
@@ -50,8 +51,13 @@ export default {
   },
   methods: {
     addTask() {
-      this.toDoTasks.push(this.currentText);
-      this.currentText = '';
+      if(this.currentText !== '') {
+        this.toDoTasks.push({
+          id: nanoid(),
+          text: this.currentText
+        });
+        this.currentText = '';
+      }
     },
     finishTask(taskIndex) {
       const removedTask = this.toDoTasks[taskIndex];
